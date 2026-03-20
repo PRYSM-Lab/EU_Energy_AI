@@ -2,7 +2,7 @@
 
 This repository contains the optimisation model and supporting material used in the research:
 
-**"Powering the Future of AI: Navigating the Trade-offs for Europe’s Energy Transition and Net-Zero Goals"**
+**"Powering the Future of AI Data Centres: Navigating the Trade-offs for Europe’s Energy Transition and Net-Zero Goals"**
 
 The model analyses how rapid growth in **AI-driven data centre (DC) demand** affects the long-term evolution of the **European electricity system**, including generation expansion, transmission investment, and decarbonisation pathways.
 
