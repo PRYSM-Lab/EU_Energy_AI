@@ -125,7 +125,7 @@ All scripts used to generate:
 
 are provided in the repository Graph folder. Please make sure all input files (e.g. excel files) that are needed for the visualisation be at the same path of the corresponding code.
 
-
+All raw data underlying display items are provided in Source Data.xlsx
 -----------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -253,7 +253,7 @@ The model includes several operational and planning constraints:
 - Bidirectional power flow limits
 
 ### Reliability
-- Loss of Load Expectation (LOLE) constraint
+- Energy no Supplied constraint
 - Maximum **3 hours/year** expected load shedding
 - System-wide reserve margin (8%)
 
