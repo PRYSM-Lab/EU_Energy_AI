@@ -299,5 +299,19 @@ This research integrates **data centre expansion into continental-scale energy s
 
 
 
+## 📬 Support
 
+The authors are available to provide guidance and technical support for users regarding:
 
+* Model execution
+* Input preparation
+* Solver configuration
+* Troubleshooting
+
+For further assistance, please contact the project authors.
+
+---
+
+## 📜 Contact
+
+Mohammad Hemmati m.hemmati@ucl.ac.uk; Vassilis M. Charitopoulos, v.charitopoulos@ucl.ac.uk
