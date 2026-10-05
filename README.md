@@ -2,7 +2,7 @@
 
 This repository contains the optimisation model and supporting material used in the research:
 
-**"Powering the Future of AI Data Centres: Navigating the Trade-offs for Europe’s Energy Transition and Net-Zero Goals"**
+**"Powering the Future of AI Data Centres Under European Net Zero and Energy Transition Goals"**
 
 The model analyses how rapid growth in **AI-driven data centre (DC) demand** affects the long-term evolution of the **European electricity system**, including generation expansion, transmission investment, and decarbonisation pathways.
 
@@ -108,8 +108,13 @@ When the model is executed:
 - Results are automatically stored in output files.
 
 ---
+## 6. Spatio-Temporal Flexibility
 
-## 6. Figure and Visualization Scripts
+The script **`New Europe with Flex`** extends the temporal and spatial flexibility of data centre. For running a specific case, the value of \lambda, \mu and Hshift should be adjusted. 
+
+
+
+## 7. Figure and Visualization Scripts
 
 All scripts used to generate:
 
@@ -118,7 +123,7 @@ All scripts used to generate:
 - Heatmaps
 - Visualisations used in the paper
 
-are provided in the repository.
+are provided in the repository Graph folder. Please make sure all input files (e.g. excel files) that are needed for the visualisation be at the same path of the corresponding code.
 
 
 -----------------------------------------------------------------------------------------------------------------------------------
