@@ -66,7 +66,7 @@ All parameters and data sources used in this file are **fully documented with re
 
 ## 4. Baseline Energy System Model
 
-The script **`EUPan BaseModel`** implements the **baseline European energy system optimisation model** **without data centre demand**.
+The script **`EUPan_BaseModel`** implements the **baseline European energy system optimisation model** **without data centre demand**.
 
 This model:
 
@@ -99,8 +99,15 @@ The input assumptions include:
 The scenario-specific constraints are implemented directly in the model code.  
 Users can activate the desired scenario by selecting the corresponding constraint in the script. Detailed explanations are provided within the code.
 The model can be run using either of the two load profiles provided in the input data file. Depending on the profile selected, the user should reference the corresponding column, as specified in the ‘DC’ sheet of the input file.
+Scenario selection:
 
-Because the **planned transmission expansion in Europe may not be sufficient to accommodate high data centre demand growth**, the **upper bound for technology build-out** in high-growth scenarios is relaxed to **120% of the baseline TYNDP build-out targets**.
+- The European DC capacity of each scenario is set by the parameter `TotCapX` in the DC capacity constraints: `TotCap`–`TotCap6` (IEA), `TotCap11`–`TotCap17` (ICIS) and `TotCap21`–`TotCap27` (McKinsey), each in the order Base, Lift-Off, High-Eff, Headwinds, Pess-Def, Pess-Med, Pess-End. By default, IEA Base is selected.
+- For the six Pessimistic scenarios, the decommissioning term (`DCapNewAI`) in the DC capacity dynamics constraint should be activated.
+- Up to 2030, the DC capacity of each country grows at a country-specific annual growth rate; from 2035, the European total follows the selected scenario and its allocation across countries is optimised.
+
+The installed capacity of nuclear, onshore and offshore wind, solar and batteries is limited to **120% of the TYNDP Global Ambition build-out level** in 18 of the 21 scenarios, as in the baseline model. Because the **planned expansion in Europe may not be sufficient to accommodate the highest data centre demand growth**, this limit is set to **130%** in the three **Lift-Off** scenarios (IEA, ICIS and McKinsey). In the code, `1.2` should be changed to `1.3` in the `TargetMax` constraint for these scenarios.
+
+In the data centre scenarios, annual emissions in 2030–2045 may exceed the emission target by up to **20%** (`Slack <= 0.2*EmTarget`). The overshoot is penalised at **300 €/tCO2** in addition to the carbon price, and no overshoot is allowed in 2050 (net zero).
 
 When the model is executed:
 
@@ -110,7 +117,15 @@ When the model is executed:
 ---
 ## 6. Spatio-Temporal Flexibility
 
-The script **`New Europe with Flex`** extends the temporal and spatial flexibility of data centre. For running a specific case, the value of \lambda, \mu and Hshift should be adjusted. 
+TThe script **`Final_Spatiotemporal_flex.py`** extends the temporal and spatial flexibility of data centre. For running a specific case, the following should be adjusted in the code:
+
+- λ (temporal flexibility level): right-hand side of `MaxDelay_rule` (100% by default)
+- μ (spatial flexibility level): right-hand side of `SpatialLimit_rule` (100% by default)
+- H<sup>Shift</sup> (shifting window, hours): `model.HShift`, set to a single value H, e.g. `model.HShift = Set(initialize=[H])`
+- Case 1 (migration within the five regional markets) or Case 2 (pan-European migration): `model.cc_region`
+- DC scenario: `TotCapX` in the DC capacity constraints (as in Section 5)
+
+Equation numbers in the comments of this script follow the Methods of the main text (Eqs. 14–24). Results are written for 2025–2045 by default; t = 6 should be added to the output loops to include 2050. 
 
 
 
@@ -137,7 +152,7 @@ The framework is formulated as a ** Mixed-Integer Linear Programming (MILP) mode
 - Data centre electricity demand growth  
 - System reliability and carbon constraints  
 
-The model is implemented using **Python and Pyomo**.
+The model is implemented using **Python and Pyomo** and solved with **Gurobi**. Equation numbers in the code comments follow the Supplementary Information (Supplementary Eqs. 1–46).
 
 ---
 
@@ -183,6 +198,7 @@ Generation technologies:
 - Biomass
 - Biomass with CCS
 - Oil
+- Hydro
 
 Energy storage:
 
@@ -201,7 +217,7 @@ The model explicitly represents **AI-driven hyperscale data centre electricity d
 
 Key modelling features:
 
-- Initial European DC capacity (2024 baseline)
+- Initial European DC capacity (2024 IT capacity × PUE of 1.45, with 75% assumed to be AI-focused)
 - Country-level spatial distribution
 - Growth scenarios derived from:
 
@@ -212,8 +228,8 @@ Key modelling features:
 - **21 scenario pathways** describing different AI adoption trajectories
 - Hyperscale load profiles based on **real operational data**
 
-Up to **2030**, capacity growth is scenario-driven.  
-After **2030**, optimal allocation of DC capacity is determined **endogenously by the optimisation model**.
+Up to **2030**, the capacity of each country grows at a country-specific annual growth rate.  
+After **2030**, the European total follows each scenario and the optimal allocation of DC capacity is determined **endogenously by the optimisation model**.
 
 ---
 
@@ -253,13 +269,14 @@ The model includes several operational and planning constraints:
 - Bidirectional power flow limits
 
 ### Reliability
-- Energy no Supplied constraint
+- Energy not Supplied constraint
 - Maximum **3 hours/year** expected load shedding
 - System-wide reserve margin (8%)
 
 ### Climate policy
 - Carbon emission accounting
 - Net-zero electricity sector target by **2050**
+- Limited emission overshoot in 2030–2045 in the data centre scenarios (Section 5)
 
 ---
 
